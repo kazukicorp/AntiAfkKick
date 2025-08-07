@@ -19,7 +19,7 @@ namespace AntiAfkKick
         [PluginService] internal static IFlyTextGui FlyText { get; private set; }
         [PluginService] internal static IFramework Framework { get; private set; }
         [PluginService] internal static IGameGui GameGui { get; private set; }
-        [PluginService] internal static IGameNetwork GameNetwork { get; private set; }
+        //[PluginService] internal static IGameNetwork GameNetwork { get; private set; }
         [PluginService] internal static IJobGauges Gauges { get; private set; }
         [PluginService] internal static IKeyState KeyState { get; private set; }
         [PluginService] internal static IObjectTable Objects { get; private set; }

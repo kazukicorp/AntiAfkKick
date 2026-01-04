@@ -3,6 +3,6 @@
     "Name": "AntiAfkKick",
     "Description": "這是一款可以防止玩家因長時間無任何遊戲操作，而被系統自動踢出《Final Fantasy XIV》的輔助插件。\n安裝後即可立即生效，無需任何額外設定，輕鬆使用無負擔。",
     "Punchline": "這是一款可以防止玩家因長時間無任何遊戲操作，而被系統自動踢出遊戲的輔助插件。",
-    "RepoUrl": "https://github.com/HKazuki0818/AntiAfkKick",
-    "IconUrl": "https://raw.githubusercontent.com/HKazuki0818/AntiAfkKick/master/AntiAfkKick-Dalamud/images/icon.png"
+    "RepoUrl": "https://github.com/kazukicorp/AntiAfkKick",
+    "IconUrl": "https://raw.githubusercontent.com/kazukicorp/AntiAfkKick/main/AntiAfkKick/images/icon.png"
 }

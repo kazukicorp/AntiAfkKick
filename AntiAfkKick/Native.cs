@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace AntiAfkKick
@@ -53,45 +52,41 @@ namespace AntiAfkKick
             }
         }
 
-
-        public static IEnumerable<IntPtr> GetGameWindows()
+        public static bool TryFindGameWindow(out IntPtr hwnd)
         {
-            var hwnd = IntPtr.Zero;
+            hwnd = IntPtr.Zero;
             while (true)
             {
                 hwnd = FindWindowEx(IntPtr.Zero, hwnd, "FFXIVGAME", null);
-                if (hwnd == IntPtr.Zero) yield break;
-                yield return hwnd;
+                if (hwnd == IntPtr.Zero) break;
+                GetWindowThreadProcessId(hwnd, out var pid);
+                if (pid == Process.GetCurrentProcess().Id) break;
             }
+            return hwnd != IntPtr.Zero;
         }
 
         [DllImport("user32.dll")]
         static extern IntPtr FindWindowEx(IntPtr hWndParent, IntPtr hWndChildAfter, string lpszClass, string lpszWindow);
 
+        [DllImport("user32.dll")]
+        static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         public static extern IntPtr GetForegroundWindow();
 
-        [DllImport("user32.dll")]
-        internal static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern ulong GetTickCount64();
-
         public class Keypress
         {
-            public const int LControlKey = 162;
-            public const int Space = 32;
+            public const int IMEConvert = 28;
 
-            const uint WM_KEYUP = 0x101;
-            const uint WM_KEYDOWN = 0x100;
+            public const uint WM_KEYUP = 0x101;
+            public const uint WM_KEYDOWN = 0x100;
 
             [DllImport("user32.dll")]
-            private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+            public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
             public static void SendKeycode(IntPtr hwnd, int keycode)
             {
                 SendMessage(hwnd, WM_KEYDOWN, (IntPtr)keycode, (IntPtr)0);
-                Thread.Sleep(200);
                 SendMessage(hwnd, WM_KEYUP, (IntPtr)keycode, (IntPtr)0);
             }
         }

@@ -1,42 +1,33 @@
 ﻿# AntiAfkKick
-An application, Dalamud and ACT plugin for preventing being auto-kicked from FFXIV due to inactivity.
-## Become a Supporter!
-If you like AntiAfkKick, please consider becoming a supporter on Patreon or via other means! This will help me to continue updating AntiAfkKick and work on new plugins and features and you will receive benefits such as early progress updates, priority support, prioritized feature requests, early testing builds and private tools. 
-- [Subscribe on Patreon](https://subscribe.nightmarexiv.com/) - eligible for Discord role
-- [Donate Litecoin, Bitcoin, Tether or other crypto](https://crypto.nightmarexiv.com/) - eligible for Discord role
+這是一款可以防止玩家因長時間無任何遊戲操作，而被系統自動踢出《Final Fantasy XIV》的輔助插件。
 
-### Also:
-- [Explore other plugins I maintain or contributed to](https://explore.nightmarexiv.com/)
-- [Join NightmareXIV Discord server to receive fast support and pings about plugin updates](https://discord.gg/m8NRt4X8Gf)
-## Description
+## 關於
+此版＜AntiAfkKick＞是針對《Final Fantasy XIV》繁中服客戶端特別修改的專用版本，請勿使用於《Final Fantasy XIV》其他地區的客戶端。個人目前僅對Dalamud版本進行優化及後續維護，ACT與獨立運行版本請參考下方說明，移至原開發者＜AntiAfkKick＞專頁下載。
 
-|Attention! Standalone version sometimes may have an issue if you're using a controller and afk without alt-tabbing out of the game. If you experience this issue, alt-tab before going AFK.|
+
+## 說明
+|注意！獨立運行版本在使用手把操作時，若直接掛機且未切換出遊戲視窗的情況下，有時可能會發生插件失效的問題。為避免此情況發生，請在離開座位前使用 Alt+Tab 切換出遊戲視窗。|
 |---|
 
-An application, Dalamud and ACT plugin for preventing being auto-kicked from FFXIV due to inactivity.
-
-**Please use responsibly, this is meant to be used for gatherers or if you are waiting for raid/pf/event, not to just afk**
-
-## Dalamud plugin
-Recommended if you are using FFXIV Quick Launcher. Using AntiAfkKick as Dalamud plugin provides advantages of automatically launching together with game and automatic updates. ACT plugin and standalone version must be updated manually if ever needed.
-
-Add my custom repo URL: 
-
-`https://raw.githubusercontent.com/NightmareXIV/MyDalamudPlugins/main/pluginmaster.json` 
-
-then install plugin from plugins list.
-
-Detailed instruction available here: https://github.com/NightmareXIV/MyDalamudPlugins
-
-## ACT plugin
-Download it here: https://github.com/NightmareXIV/AntiAfkKick/releases
-
-Then copy it to any convenient folder. Open up ACT, go to "Plugins" tab, then to "Plugin Listing", then click "Browse" button and select DLL file you have just downloaded, and finally click "Add/Enable plugin". Upon doing so ACT may ask you to unblock file. In this case press "Yes".
+**請依據情況合理使用此插件，該插件僅提供長時間等待採集點刷新、副本招募或特別活動時使用，而非用於無意義的長時間城內掛機。**
 
 
-## Standalone version
-Just download it and run it. No configuration needed. To exit, access program's tray icon.
+## Dalamud版本
+若您正在使用＜XIVLauncherTC＞快速啟動器的玩家，強烈建議使用Dalamud版本的插件。此版本可隨遊戲啟動而自動啟用，並支援自動更新功能；ACT與獨立運行版本需要定期進行手動更新。請在＜Dalamud＞中新增「我的第三方插件倉庫」，然後在從插件列表中安裝插件即可。
 
-Download link: https://github.com/NightmareXIV/AntiAfkKick/releases/download/2.1.0.4/AntiAfkKick-Standalone.exe
-## This plugin is feature complete
-This means that everything that was planned for this plugin is implemented and there are no plans to add any more functions. The plugin is still being maintained and updated and bugs are being fixed, but no new feature requests are accepted. New features can still be implemented either via direct commission request or through patron votes.
+
+我的第三方插件倉庫URL：
+
+`https://raw.githubusercontent.com/kazukicorp/DalamudPlugins/main/pluginmaster.json` 
+
+
+## ACT版本
+下載連結：https://github.com/NightmareXIV/AntiAfkKick/releases
+
+請至上方連結下載最新版本插件，然後將其複製到任意資料夾。接著開啟ACT並轉到“插件”分頁的“插件列表”後，點擊“瀏覽”按鈕，並選擇您剛剛下載的DLL檔，最後點擊“新增/啟用插件”。此時，ACT可能會要求您解除檔案的封鎖，如果出現這種情況，請點擊一下「是」允許通過。
+
+
+## 獨立運行版本
+下載連結：https://github.com/NightmareXIV/AntiAfkKick/releases/download/2.1.0.4/AntiAfkKick-Standalone.exe
+
+下載後直接執行即可，無需任何設定。若要退出程式，請點擊系統匣圖示關閉。

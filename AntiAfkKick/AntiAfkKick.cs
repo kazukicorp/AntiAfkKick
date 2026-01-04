@@ -1,91 +1,110 @@
-﻿using System;
+﻿using AntiAfkKick;
+using Dalamud.Game.ClientState.Keys;
+using Dalamud.Hooking;
+using Dalamud.Logging;
+using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Client.UI;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using static AntiAfkKick.Native.Keypress;
 
-namespace AntiAfkKick
+namespace AntiAfkKick_Dalamud
 {
-    class AntiAfkKick
+    unsafe class AntiAfkKick : IDalamudPlugin
     {
-        static ulong NextKeyPress = 0;
-        static NotifyIcon n = null;
-        private static string appGuid = "92f42221-51a5-4753-9e91-84aeea157d17";
+        public string Name => "AntiAfkKick-Dalamud";
+        internal volatile bool running = true;
+        public volatile int TimerLimit = 30;
+        public volatile int ThreadSleepInterval = 10000;
 
-        static void Main(string[] args)
+        public void Dispose()
         {
-            using (Mutex mutex = new Mutex(false, "Global\\" + appGuid))
+            running = false;
+            Svc.Commands.RemoveHandler("/aak");
+        }
+
+        public AntiAfkKick(IDalamudPluginInterface pluginInterface)
+        {
+            pluginInterface.Create<Svc>();
+            Svc.Commands.AddHandler("/aak", new(OnCommand) { ShowInHelp = false });
+            BeginWork();
+        }
+
+        private void OnCommand(string command, string arguments)
+        {
+            if(int.TryParse(arguments.Split(" ")[0], out var tlimit) && int.TryParse(arguments.Split(" ")[1], out var tsleep))
             {
-                if (!mutex.WaitOne(0, false))
+                TimerLimit = tlimit;
+                ThreadSleepInterval = tsleep;
+                Svc.Chat.Print($"TimerLimit={TimerLimit}, ThreadSleepInterval={ThreadSleepInterval}");
+            }
+        }
+
+        void BeginWork()
+        {
+            float*[] afkPtrs = [
+                 &UIModule.Instance()->GetInputTimerModule()->AfkTimer,
+                 &UIModule.Instance()->GetInputTimerModule()->ContentInputTimer,
+                 &UIModule.Instance()->GetInputTimerModule()->InputTimer,
+            ];
+            float[] GetTimers()
+            {
+                var timers = new float[afkPtrs.Length];
+                for (int i = 0; i < timers.Length; i++)
                 {
-                    MessageBox.Show("Application already running");
-                    return;
+                    timers[i] = *afkPtrs[i];
                 }
-                Icon icon;
-                try
+                return timers;
+            }
+            new Thread((ThreadStart)delegate
+            {
+                while (running)
                 {
-                    icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-                }
-                catch (Exception)
-                {
-                    icon = SystemIcons.Application;
-                }
-                n = new NotifyIcon
-                {
-                    Icon = icon,
-                    Visible = true,
-                    ContextMenu = new ContextMenu(new MenuItem[] {
-                        new MenuItem("AntiAfkKick standalone") { Enabled = false },
-                        new Sepa("-"),
-                        new MenuItem("Invoke manually", delegate 
-                        {
-                            var str = new List<string>();
-                            str.Add("Keypress invoked manually. Results:");
-                            foreach (var handle in Native.GetGameWindows())
-                            {
-                                if(Native.GetForegroundWindow() != handle || Native.IdleTimeFinder.GetIdleTime() > 60 * 1000)
-                                {
-                                    str.Add(Native.GetTickCount64() + ": Sending keypress to FFXIV window " + handle.ToString());
-                                    Native.Keypress.SendKeycode(handle, Native.Keypress.LControlKey);
-                                }
-                            }
-                            MessageBox.Show(string.Join("\n", str), "AntiAfkKick standalone");
-                        }),
-                        new MenuItem("Report issue", delegate { Process.Start(new ProcessStartInfo() { UseShellExecute=true, FileName="https://discord.nightmarexiv.com/" }); }),
-                        new MenuItem("Donate", delegate { Process.Start(new ProcessStartInfo() { UseShellExecute=true, FileName="https://subscribe.nightmarexiv.com/" }); }),
-                        new MenuItem("Exit", delegate { n.Dispose(); Environment.Exit(0); })
-                    }),
-                    Text = "AntiAfkKick"
-                };
-                new Thread((ThreadStart)delegate
-                {
-                    while (true)
+                    try
                     {
-                        Thread.Sleep(10000);
-                        Console.WriteLine($"Cycle begins {Native.GetTickCount64()}");
-                        try
+                        
+                        Svc.Log.Verbose($"Afk timers: {string.Join(",", GetTimers().Select(x => x.ToString()))}");
+                        if (GetTimers().Max() > TimerLimit)
                         {
-                            if (Native.GetTickCount64() > NextKeyPress) {
-                                foreach (var handle in Native.GetGameWindows())
+                            if (Native.TryFindGameWindow(out var mwh))
+                            {
+                                Svc.Log.Verbose($"Afk timer before: {string.Join(",", GetTimers().Select(x => x.ToString()))}");
+                                Svc.Log.Verbose($"Sending anti-afk keypress: {mwh:X16}");
+                                new TickScheduler(delegate
                                 {
-                                    if(Native.GetForegroundWindow() != handle || Native.IdleTimeFinder.GetIdleTime() > 60 * 1000)
+                                    SendMessage(mwh, WM_KEYDOWN, (IntPtr)IMEConvert, (IntPtr)0);
+                                    new TickScheduler(delegate
                                     {
-                                        Console.WriteLine(Native.GetTickCount64() + ": Sending keypress to FFXIV window " + handle.ToString());
-                                        Native.Keypress.SendKeycode(handle, Native.Keypress.LControlKey);
-                                    }
-                                }
-                                NextKeyPress = Native.GetTickCount64() + 2 * 60 * 1000;
+                                        SendMessage(mwh, WM_KEYUP, (IntPtr)IMEConvert, (IntPtr)0);
+                                        Svc.Log.Verbose($"Afk timer after: {string.Join(",", GetTimers().Select(x => x.ToString()))}");
+                                    }, Svc.Framework, 200);
+                                }, Svc.Framework, 0);
+                            }
+                            else
+                            {
+                                Svc.Log.Error("Could not find game window");
                             }
                         }
-                        catch (Exception) { }
+                        Thread.Sleep(ThreadSleepInterval);
                     }
-                }).Start();
-                Application.Run();
-            }
+                    catch (Exception e)
+                    {
+                        Svc.Log.Error(e.Message + "\n" + e.StackTrace ?? "");
+                    }
+                }
+                Svc.Log.Debug("Thread has stopped");
+            }).Start();
+        }
+
+        public static float Max(params float[] values)
+        {
+            return values.Max();
         }
     }
 }

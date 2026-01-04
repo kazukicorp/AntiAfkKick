@@ -3,26 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntiAfkKick-Standalone", "AntiAfkKick\AntiAfkKick-Standalone.csproj", "{F15D6CA9-CEE5-4FC7-A7A1-87C70DBBC6FD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntiAfkKick-Dalamud", "AntiAfkKick-Dalamud\AntiAfkKick-Dalamud.csproj", "{EFF438EF-C467-4142-8E8B-D65D113CAEA3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiAfkKick-ACT", "AntiAfkKick-ACT\AntiAfkKick-ACT.csproj", "{322EE0BF-A029-4495-9482-EC5016529D2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntiAfkKick", "AntiAfkKick\AntiAfkKick.csproj", "{30740C5E-DB23-4143-B238-0FA3D29353EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EFF438EF-C467-4142-8E8B-D65D113CAEA3}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{EFF438EF-C467-4142-8E8B-D65D113CAEA3}.Debug|Any CPU.Build.0 = Debug|x64
-		{EFF438EF-C467-4142-8E8B-D65D113CAEA3}.Release|Any CPU.ActiveCfg = Release|x64
-		{EFF438EF-C467-4142-8E8B-D65D113CAEA3}.Release|Any CPU.Build.0 = Release|x64
-		{322EE0BF-A029-4495-9482-EC5016529D2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{322EE0BF-A029-4495-9482-EC5016529D2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{322EE0BF-A029-4495-9482-EC5016529D2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{322EE0BF-A029-4495-9482-EC5016529D2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30740C5E-DB23-4143-B238-0FA3D29353EF}.Debug|x64.ActiveCfg = Debug|x64
+		{30740C5E-DB23-4143-B238-0FA3D29353EF}.Debug|x64.Build.0 = Debug|x64
+		{30740C5E-DB23-4143-B238-0FA3D29353EF}.Release|x64.ActiveCfg = Release|x64
+		{30740C5E-DB23-4143-B238-0FA3D29353EF}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
